@@ -77,6 +77,18 @@ export function canViewAllAdvisors(user: AuthenticatedUser | null): boolean {
   return isAdmin(user) || isSupervisor(user);
 }
 
+/** El módulo de métricas está disponible para cualquier usuario autenticado. */
+export function canViewMetrics(user: AuthenticatedUser | null): boolean {
+  return user !== null;
+}
+
+/** Las métricas del inbox son de empresa; el backend las reserva a este alcance. */
+export function canViewInboxMetrics(user: AuthenticatedUser | null): boolean {
+  if (!user) return false;
+  if (!user.permissions) return isAdmin(user) || isSupervisor(user);
+  return user.permissions.view_company_indicators;
+}
+
 /** Muestra u oculta el selector de asesor en filtros y formularios. */
 export function canSelectAdvisor(user: AuthenticatedUser | null): boolean {
   return canViewAllAdvisors(user);

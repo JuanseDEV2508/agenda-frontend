@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarClock, CalendarDays, LogOut, Menu, UserRound, X } from "lucide-react";
+import { BarChart3, CalendarClock, CalendarDays, LogOut, Menu, UserRound, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -18,11 +18,12 @@ import { routes } from "@/config/routes";
 import { useSession } from "@/features/auth/hooks/use-session";
 import { ROLE_LABELS } from "@/features/auth/types";
 import { capitalize, formatEventDate } from "@/lib/dates";
+import { canViewMetrics } from "@/lib/permissions";
 import { cn } from "@/lib/utils/cn";
 
-/** El alcance del producto es sólo agenda: no se listan módulos inexistentes. */
 const NAV_ITEMS = [
   { href: routes.agenda, label: "Agenda", icon: CalendarDays },
+  { href: routes.metrics, label: "Métricas", icon: BarChart3, requiresMetrics: true },
   { href: routes.profile, label: "Mi perfil", icon: UserRound },
 ] as const;
 
@@ -64,7 +65,10 @@ function Sidebar({
   isMobileOpen: boolean;
   onCloseMobile: () => void;
 }) {
-  const { company } = useSession();
+  const { company, user } = useSession();
+  const navItems = NAV_ITEMS.filter(
+    (item) => !("requiresMetrics" in item && item.requiresMetrics) || canViewMetrics(user),
+  );
 
   return (
     <>
@@ -110,7 +114,7 @@ function Sidebar({
         </div>
 
         <ul className="flex-1 space-y-1 p-3">
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isActive =
               pathname === item.href || pathname.startsWith(`${item.href}/`);
 
@@ -164,7 +168,11 @@ function AppHeader({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const pathname = usePathname();
   const { user, company, timezone, logout, isLoggingOut } = useSession();
 
-  const sectionTitle = pathname.startsWith(routes.profile) ? "Mi perfil" : "Agenda";
+  const sectionTitle = pathname.startsWith(routes.profile)
+    ? "Mi perfil"
+    : pathname.startsWith(routes.metrics)
+      ? "Métricas"
+      : "Agenda";
   const todayLabel = capitalize(formatEventDate(new Date(), timezone));
 
   return (

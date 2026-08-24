@@ -42,4 +42,15 @@ export const queryKeys = {
   },
 
   schedulingConfig: ["scheduling-configuration", "default"] as const,
+
+  dashboard: {
+    all: ["dashboard"] as const,
+    overview: (period: string) => ["dashboard", "overview", period] as const,
+    events: (period: string) => ["dashboard", "events", period] as const,
+    advisors: (period: string) => ["dashboard", "advisors", period] as const,
+    messages: (period: string) => ["dashboard", "messages", period] as const,
+    heatmap: (period: string) => ["dashboard", "heatmap", period] as const,
+    conversations: (period: string) => ["dashboard", "conversations", period] as const,
+    funnel: (period: string) => ["dashboard", "funnel", period] as const,
+  },
 } as const;
