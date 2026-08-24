@@ -26,7 +26,11 @@ function emitSessionExpired() {
   window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT));
 }
 
-function buildUrl(path: string, searchParams?: QueryParams): string {
+function buildUrl(
+  path: string,
+  searchParams?: QueryParams,
+  prefix = API_PROXY_PREFIX,
+): string {
   const clean = path.replace(/^\/+/, "").replace(/\/+$/, "");
   const query = new URLSearchParams();
 
@@ -38,19 +42,20 @@ function buildUrl(path: string, searchParams?: QueryParams): string {
   }
 
   const suffix = query.toString();
-  return `${API_PROXY_PREFIX}/${clean}${suffix ? `?${suffix}` : ""}`;
+  return `${prefix}/${clean}${suffix ? `?${suffix}` : ""}`;
 }
 
 async function request<T>(
   method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE",
   path: string,
   options: RequestOptions = {},
+  prefix = API_PROXY_PREFIX,
 ): Promise<T> {
   const { searchParams, body, signal } = options;
 
   let response: Response;
   try {
-    response = await fetch(buildUrl(path, searchParams), {
+    response = await fetch(buildUrl(path, searchParams, prefix), {
       method,
       headers: {
         Accept: "application/json",
@@ -83,12 +88,16 @@ async function request<T>(
   return data as T;
 }
 
-export const apiClient = {
-  get: <T>(path: string, options?: RequestOptions) => request<T>("GET", path, options),
-  post: <T>(path: string, options?: RequestOptions) => request<T>("POST", path, options),
-  patch: <T>(path: string, options?: RequestOptions) => request<T>("PATCH", path, options),
-  put: <T>(path: string, options?: RequestOptions) => request<T>("PUT", path, options),
-  delete: <T>(path: string, options?: RequestOptions) => request<T>("DELETE", path, options),
-};
+export function createApiClient(prefix = API_PROXY_PREFIX) {
+  return {
+    get: <T>(path: string, options?: RequestOptions) => request<T>("GET", path, options, prefix),
+    post: <T>(path: string, options?: RequestOptions) => request<T>("POST", path, options, prefix),
+    patch: <T>(path: string, options?: RequestOptions) => request<T>("PATCH", path, options, prefix),
+    put: <T>(path: string, options?: RequestOptions) => request<T>("PUT", path, options, prefix),
+    delete: <T>(path: string, options?: RequestOptions) => request<T>("DELETE", path, options, prefix),
+  };
+}
+
+export const apiClient = createApiClient();
 
 export { ApiError };

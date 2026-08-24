@@ -16,6 +16,9 @@ export const authRoutes = {
 /** Prefijo del proxy servidor→backend. */
 export const API_PROXY_PREFIX = "/api/proxy";
 
+/** Endpoints públicos del BFF exclusivos para las métricas del dashboard. */
+export const API_DASHBOARD_PREFIX = "/api/dashboard";
+
 /** Rutas accesibles sin sesión. */
 export const PUBLIC_ROUTES: readonly string[] = [routes.login];
 
