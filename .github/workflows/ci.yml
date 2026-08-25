@@ -10,10 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # La versión hay que declararla aquí: el repositorio no fija
+      # `packageManager` en package.json, y sin ninguna de las dos la acción
+      # aborta. Se usan las versiones que el README documenta como probadas.
       - uses: pnpm/action-setup@v4
+        with:
+          version: 11
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
