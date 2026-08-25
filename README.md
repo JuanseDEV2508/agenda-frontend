@@ -251,3 +251,17 @@ pnpm test
 - No se inventaron endpoints ni campos.
 - No hay tokens, credenciales ni secretos en el código.
 - No se envía `company_id`: la empresa la resuelve el backend desde la identidad autenticada.
+
+---
+
+## Flujo de contribución
+
+`staging` es la rama de integración: las ramas de trabajo se crean a partir de
+ella y los pull requests apuntan a ella, no a `main`.
+
+```bash
+git checkout -b tipo/descripcion-corta origin/staging
+# ...cambios...
+pnpm lint && pnpm typecheck && pnpm test
+git push -u origin tipo/descripcion-corta
+```
