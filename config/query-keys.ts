@@ -43,6 +43,14 @@ export const queryKeys = {
 
   schedulingConfig: ["scheduling-configuration", "default"] as const,
 
+  chat: {
+    all: ["chat"] as const,
+    conversationsAll: ["chat", "conversations"] as const,
+    conversations: (filters: { filter?: string; advisor?: string }) =>
+      ["chat", "conversations", filters] as const,
+    detail: (conversationId: string) => ["chat", "detail", conversationId] as const,
+  },
+
   dashboard: {
     all: ["dashboard"] as const,
     overview: (period: string) => ["dashboard", "overview", period] as const,

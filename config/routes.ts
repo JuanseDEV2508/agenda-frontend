@@ -1,6 +1,7 @@
 export const routes = {
   login: "/login",
   agenda: "/agenda",
+  chat: "/chat",
   metrics: "/metricas",
   eventDetail: (id: string) => `/agenda/eventos/${id}`,
   profile: "/perfil",
