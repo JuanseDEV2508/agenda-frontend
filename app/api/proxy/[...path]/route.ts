@@ -27,6 +27,7 @@ const ALLOWED_RESOURCES = new Set([
   "advisor-availabilities",
   "scheduling-configurations",
   "companies",
+  "follow-ups",
 ]);
 
 const SEGMENT_PATTERN = /^[A-Za-z0-9_-]+$/;

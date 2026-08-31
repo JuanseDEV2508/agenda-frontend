@@ -37,6 +37,11 @@ export const queryKeys = {
     detail: (clientId: string) => ["clients", "detail", clientId] as const,
   },
 
+  followUps: {
+    all: ["follow-ups"] as const,
+    list: (filters: { advisor?: string; reason?: string }) => ["follow-ups", "list", filters] as const,
+  },
+
   availability: {
     blocks: (advisorId: string) => ["availability", "blocks", advisorId] as const,
   },
