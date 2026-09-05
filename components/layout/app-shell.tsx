@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils/cn";
 const NAV_ITEMS = [
   { href: routes.home, label: "Inicio", icon: House },
   { href: routes.agenda, label: "Agenda", icon: CalendarDays },
+  { href: routes.followUps, label: "Seguimiento", icon: UserSearch },
   { href: routes.metrics, label: "Métricas", icon: BarChart3, requiresMetrics: true },
   { href: routes.profile, label: "Mi perfil", icon: UserRound },
 ] as const;
