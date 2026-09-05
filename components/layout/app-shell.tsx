@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, CalendarClock, CalendarDays, LogOut, Menu, UserRound, X } from "lucide-react";
+import { BarChart3, CalendarClock, CalendarDays, LogOut, Menu, UserRound, UserSearch, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils/cn";
 
 const NAV_ITEMS = [
   { href: routes.agenda, label: "Agenda", icon: CalendarDays },
+  { href: routes.followUps, label: "Seguimiento", icon: UserSearch },
   { href: routes.metrics, label: "Métricas", icon: BarChart3, requiresMetrics: true },
   { href: routes.profile, label: "Mi perfil", icon: UserRound },
 ] as const;
@@ -168,11 +169,10 @@ function AppHeader({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const pathname = usePathname();
   const { user, company, timezone, logout, isLoggingOut } = useSession();
 
-  const sectionTitle = pathname.startsWith(routes.profile)
-    ? "Mi perfil"
-    : pathname.startsWith(routes.metrics)
-      ? "Métricas"
-      : "Agenda";
+  const sectionTitle =
+    NAV_ITEMS.find(
+      (item) => pathname === item.href || pathname.startsWith(`${item.href}/`),
+    )?.label ?? "Agenda";
   const todayLabel = capitalize(formatEventDate(new Date(), timezone));
 
   return (
