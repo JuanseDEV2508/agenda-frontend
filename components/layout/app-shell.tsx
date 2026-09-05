@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, CalendarClock, CalendarDays, LogOut, Menu, UserRound, UserSearch, X } from "lucide-react";
+import { BarChart3, CalendarClock, CalendarDays, House, LogOut, Menu, UserRound, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -22,11 +22,15 @@ import { canViewMetrics } from "@/lib/permissions";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_ITEMS = [
+  { href: routes.home, label: "Inicio", icon: House },
   { href: routes.agenda, label: "Agenda", icon: CalendarDays },
   { href: routes.followUps, label: "Seguimiento", icon: UserSearch },
   { href: routes.metrics, label: "Métricas", icon: BarChart3, requiresMetrics: true },
   { href: routes.profile, label: "Mi perfil", icon: UserRound },
 ] as const;
+
+const isCurrentPath = (pathname: string, href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -116,8 +120,7 @@ function Sidebar({
 
         <ul className="flex-1 space-y-1 p-3">
           {navItems.map((item) => {
-            const isActive =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const isActive = isCurrentPath(pathname, item.href);
 
             return (
               <li key={item.href}>
@@ -170,9 +173,7 @@ function AppHeader({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const { user, company, timezone, logout, isLoggingOut } = useSession();
 
   const sectionTitle =
-    NAV_ITEMS.find(
-      (item) => pathname === item.href || pathname.startsWith(`${item.href}/`),
-    )?.label ?? "Agenda";
+    NAV_ITEMS.find((item) => isCurrentPath(pathname, item.href))?.label ?? "Inicio";
   const todayLabel = capitalize(formatEventDate(new Date(), timezone));
 
   return (

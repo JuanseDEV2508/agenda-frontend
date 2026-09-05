@@ -1,5 +1,6 @@
 export const routes = {
   login: "/login",
+  home: "/",
   agenda: "/agenda",
   followUps: "/seguimientos",
   metrics: "/metricas",
@@ -23,7 +24,7 @@ export const API_DASHBOARD_PREFIX = "/api/dashboard";
 /** Rutas accesibles sin sesión. */
 export const PUBLIC_ROUTES: readonly string[] = [routes.login];
 
-export const DEFAULT_AUTHENTICATED_ROUTE = routes.agenda;
+export const DEFAULT_AUTHENTICATED_ROUTE = routes.home;
 
 /** Parámetro usado para volver a la ruta solicitada tras iniciar sesión. */
 export const NEXT_PARAM = "next";
