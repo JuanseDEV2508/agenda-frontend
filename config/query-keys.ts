@@ -37,11 +37,24 @@ export const queryKeys = {
     detail: (clientId: string) => ["clients", "detail", clientId] as const,
   },
 
+  followUps: {
+    all: ["follow-ups"] as const,
+    list: (filters: { advisor?: string; reason?: string }) => ["follow-ups", "list", filters] as const,
+  },
+
   availability: {
     blocks: (advisorId: string) => ["availability", "blocks", advisorId] as const,
   },
 
   schedulingConfig: ["scheduling-configuration", "default"] as const,
+
+  chat: {
+    all: ["chat"] as const,
+    conversationsAll: ["chat", "conversations"] as const,
+    conversations: (filters: { filter?: string; advisor?: string }) =>
+      ["chat", "conversations", filters] as const,
+    detail: (conversationId: string) => ["chat", "detail", conversationId] as const,
+  },
 
   dashboard: {
     all: ["dashboard"] as const,

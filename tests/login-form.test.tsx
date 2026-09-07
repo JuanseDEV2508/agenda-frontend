@@ -82,7 +82,7 @@ describe("formulario de inicio de sesión", () => {
     await user.type(screen.getByLabelText(/^contraseña/i), "secreto123");
     await user.click(screen.getByRole("button", { name: /iniciar sesión/i }));
 
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/agenda"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/"));
 
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect(url).toBe("/api/auth/login");
@@ -114,7 +114,7 @@ describe("formulario de inicio de sesión", () => {
     await user.type(screen.getByLabelText(/^contraseña/i), "secreto123");
     await user.click(screen.getByRole("button", { name: /iniciar sesión/i }));
 
-    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/agenda"));
+    await waitFor(() => expect(replaceMock).toHaveBeenCalledWith("/"));
   });
 
   it("muestra el error de credenciales sin redirigir", async () => {

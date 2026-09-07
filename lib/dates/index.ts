@@ -113,6 +113,27 @@ export function formatDateTime(value: string | Date | null | undefined, timeZone
 }
 
 /** "1 h 30 min" */
+/**
+ * Cuánto hace de una fecha, en días. Para colas donde lo que importa es la
+ * antigüedad, no el día exacto: "hace 12 días" se lee de un vistazo y
+ * "3 de agosto" hay que calcularlo mentalmente.
+ */
+export function formatRelativeDays(
+  value: string | Date | null | undefined,
+  timeZone: string,
+  reference: Date = new Date(),
+): string {
+  const date = typeof value === "string" ? parseApiDate(value) : (value ?? null);
+  if (!date) return "—";
+
+  const days = differenceInCalendarDays(toZoned(reference, timeZone), toZoned(date, timeZone));
+  if (days <= 0) return "hoy";
+  if (days === 1) return "ayer";
+  if (days < 30) return `hace ${days} días`;
+  const months = Math.round(days / 30);
+  return months === 1 ? "hace un mes" : `hace ${months} meses`;
+}
+
 export function formatDuration(minutes: number | null): string {
   if (minutes === null || Number.isNaN(minutes) || minutes < 0) return "—";
   const hours = Math.floor(minutes / 60);
