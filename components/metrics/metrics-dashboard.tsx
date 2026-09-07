@@ -18,8 +18,8 @@ const PERIODS: { value: DashboardPeriod; label: string }[] = [
   { value: "90d", label: "90 días" }, { value: "mtd", label: "Este mes" }, { value: "ytd", label: "Este año" },
 ];
 
-const num = new Intl.NumberFormat("es-CO");
-const pct = (value: number | null | undefined) => value == null ? "—" : `${value.toLocaleString("es-CO", { maximumFractionDigits: 1 })}%`;
+export const num = new Intl.NumberFormat("es-CO");
+export const pct = (value: number | null | undefined) => value == null ? "—" : `${value.toLocaleString("es-CO", { maximumFractionDigits: 1 })}%`;
 const minutes = (seconds: number | null | undefined) => seconds == null ? "—" : seconds < 60 ? `${Math.round(seconds)} s` : `${Math.round(seconds / 60)} min`;
 
 export function MetricsDashboard() {
@@ -71,8 +71,8 @@ export function MetricsDashboard() {
 }
 
 function SectionTitle({ icon: Icon, title }: { icon: typeof BarChart3; title: string }) { return <h3 className="flex items-center gap-2 text-lg font-semibold"><Icon className="size-5 text-brand-600" />{title}</h3>; }
-function Panel({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) { return <section className={cn("rounded-xl border border-[var(--border-subtle)] bg-[var(--surface)] p-4", className)}><h3 className="mb-4 text-sm font-semibold">{title}</h3>{children}</section>; }
-function Metric({ label, value, trend }: { label: string; value: string; trend?: number | null }) { return <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface)] p-4"><p className="text-sm text-[var(--text-muted)]">{label}</p><p className="mt-1 text-2xl font-bold">{value}</p><p className={cn("mt-1 text-xs", trend == null ? "text-[var(--text-muted)]" : trend >= 0 ? "text-emerald-600" : "text-rose-600")}>{trend == null ? "— sin base de comparación" : `${trend >= 0 ? "+" : ""}${pct(trend)} vs. periodo anterior`}</p></div>; }
+export function Panel({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) { return <section className={cn("rounded-xl border border-[var(--border-subtle)] bg-[var(--surface)] p-4", className)}><h3 className="mb-4 text-sm font-semibold">{title}</h3>{children}</section>; }
+export function Metric({ label, value, trend }: { label: string; value: string; trend?: number | null }) { return <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--surface)] p-4"><p className="text-sm text-[var(--text-muted)]">{label}</p><p className="mt-1 text-2xl font-bold">{value}</p><p className={cn("mt-1 text-xs", trend == null ? "text-[var(--text-muted)]" : trend >= 0 ? "text-emerald-600" : "text-rose-600")}>{trend == null ? "— sin base de comparación" : `${trend >= 0 ? "+" : ""}${pct(trend)} vs. periodo anterior`}</p></div>; }
 function MetricLine({ label, value }: { label: string; value: string }) { return <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 last:border-0 last:pb-0"><span className="text-sm text-[var(--text-muted)]">{label}</span><strong>{value}</strong></div>; }
 function MiniChart({ series }: { series: SeriesPoint[] }) { const max = Math.max(1, ...series.map((point) => point.total)); return <div className="flex h-40 items-end gap-px" aria-label="Serie temporal">{series.map((point) => <div key={point.bucket} className="min-w-1 flex-1 rounded-t bg-brand-500 hover:bg-brand-700" title={`${point.bucket}: ${point.total}`} style={{ height: `${Math.max(2, (point.total / max) * 100)}%` }} />)}</div>; }
 function Breakdown({ items }: { items: { total: number; share_pct: number; source?: string; event_type?: string; no_show_type?: string }[] }) { return <div className="space-y-3">{items.map((item) => <div key={item.source ?? item.event_type ?? item.no_show_type ?? "sin-dato"}><div className="flex justify-between text-sm"><span>{item.source ?? item.event_type ?? item.no_show_type ?? "Sin dato"}</span><span>{num.format(item.total)} · {pct(item.share_pct)}</span></div><div className="mt-1 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800"><div className="h-full rounded-full bg-brand-600" style={{ width: `${item.share_pct}%` }} /></div></div>)}</div>; }
