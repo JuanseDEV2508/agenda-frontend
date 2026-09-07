@@ -1,6 +1,6 @@
 "use client";
 
-import { BarChart3, CalendarClock, CalendarDays, LogOut, Menu, MessageCircle, UserRound, X } from "lucide-react";
+import { BarChart3, CalendarClock, CalendarDays, House, LogOut, Menu, MessageCircle, UserRound, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
