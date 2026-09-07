@@ -81,6 +81,23 @@ curl -u "admin@inmobiliaria.co:password" -X POST \
 
 La respuesta contiene el nuevo evento. El original queda `RESCHEDULED` y queda enlazado en historial.
 
+## Chat (inbox de WhatsApp)
+
+Base `/api/v1/inbox/`. Cada respuesta ya viene recortada por rol (R8): ADMIN ve toda la empresa, SUPERVISOR sus supervisados y las sin asignar, ADVISOR solo las suyas. Lo que queda fuera responde **404**, no 403.
+
+| Recurso | Ruta | Uso |
+|---|---|---|
+| Conversaciones | `GET /inbox/conversations/` | `?filter=all\|me\|unassigned\|bot` y `?advisor=<uuid>\|none`. Devuelve `{"conversations": [...]}`, sin paginar |
+| Detalle | `GET /inbox/conversations/{id}/` | Conversación, contacto y últimos 100 mensajes. **Pone `unread_count` a 0** |
+| Mensajes | `GET /inbox/conversations/{id}/messages/` | Cursor `limit` (1..200, def. 50), `after_id`, `before_id` |
+| Responder | `POST /inbox/conversations/{id}/messages/` | `{"content": "..."}` → `201`. **`403 CHATBOT_ENABLED` si el bot está encendido** |
+| Tomar / reasignar | `POST /inbox/conversations/{id}/claim/` | Cuerpo vacío: me la quedo. `{"advisor_id": "<uuid>"}`: reasigno (ADMIN/SUPERVISOR). Apaga el chatbot |
+| Devolver al bot | `POST /inbox/conversations/{id}/release/` | Reactiva el chatbot; conserva el dueño |
+
+Cada conversación incluye `advisor` (`{id, full_name}` o `null`): es el dueño, mientras que `assignment` (`unassigned|me|bot`) dice quién responde ahora.
+
+Responder devuelve `201` **aunque WhatsApp rechace el envío**: mira `ycloud_ok` en la respuesta y `status: "failed"` en el mensaje. Un `201` no garantiza la entrega.
+
 ## Permisos del usuario actual
 
 `GET /users/me/permissions/` devuelve las capacidades efectivas para construir el menú y habilitar acciones de la interfaz. El frontend debe usar este resultado para UX, pero el backend continúa validando los permisos en cada operación.

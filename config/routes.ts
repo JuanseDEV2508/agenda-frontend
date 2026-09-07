@@ -2,7 +2,7 @@ export const routes = {
   login: "/login",
   home: "/",
   agenda: "/agenda",
-  followUps: "/seguimientos",
+  chat: "/chat",
   metrics: "/metricas",
   eventDetail: (id: string) => `/agenda/eventos/${id}`,
   profile: "/perfil",
